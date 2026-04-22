@@ -1,0 +1,31 @@
+# ── Raw Data (too large for GitHub — 700MB) ──────────────────────────────────
+data/raw/
+
+# ── Python ───────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+.env
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+.Python
+
+# ── Node / React ─────────────────────────────────────────────────────────────
+fairvalue-webapp/node_modules/
+fairvalue-webapp/dist/
+fairvalue-webapp/.env.local
+
+# ── Streamlit ─────────────────────────────────────────────────────────────────
+.streamlit/
+
+# ── OS ────────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── IDE ───────────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
