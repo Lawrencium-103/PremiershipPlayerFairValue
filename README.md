@@ -3,10 +3,7 @@ title: FairValue Transfer Cap Estimator
 emoji: ⚽
 colorFrom: green
 colorTo: gray
-sdk: streamlit
-sdk_version: 1.32.0
-python_version: 3.11
-app_file: app.py
+sdk: docker
 pinned: true
 license: mit
 ---
