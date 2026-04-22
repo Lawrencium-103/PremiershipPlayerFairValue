@@ -2,6 +2,7 @@ import { useState } from 'react'
 import {
   PieChart, Pie, Cell, Legend, Tooltip,
   BarChart, Bar, XAxis, YAxis, ResponsiveContainer,
+  LineChart, Line
 } from 'recharts'
 
 // ── PSR Maths (all pure frontend — no API call) ────────────────────────────────
@@ -44,6 +45,11 @@ export default function FFPAdvisor() {
     Amortisation: +annualAmort.toFixed(2),
     Wages:        +annualWage.toFixed(2),
     'Agent Fees': +annualAgent.toFixed(2),
+  }))
+
+  const bookValueData = years.map((y, i) => ({
+    name: y,
+    'Remaining Asset Value': +(feeMm - annualAmort * (i + 1)).toFixed(2)
   }))
 
   return (
@@ -154,34 +160,50 @@ export default function FFPAdvisor() {
             </div>
 
             {/* Charts row */}
-            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:18 }}>
+            <div style={{ display:'flex', flexDirection:'column', gap:18 }}>
+              <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:18 }}>
+                <div className="glass" style={{ padding:24 }}>
+                  <h3 style={{ marginBottom:12 }}>PSR Budget Overview</h3>
+                  <PieChart width={280} height={230}>
+                    <Pie data={donutData} cx="50%" cy="50%" innerRadius={55} outerRadius={80} dataKey="value" paddingAngle={2}>
+                      {donutData.map((_, i) => <Cell key={i} fill={DONUT_COLORS[i]}/>)}
+                    </Pie>
+                    <Tooltip
+                      contentStyle={{ background:'var(--bg-elevated)', border:'1px solid var(--glass-border)', borderRadius:8, fontSize:12 }}
+                      formatter={(v: number) => [`£${v.toFixed(1)}m`]}/>
+                    <Legend wrapperStyle={{ fontSize:'0.75rem', color:'var(--text-2)' }}/>
+                  </PieChart>
+                </div>
 
-              <div className="glass" style={{ padding:24 }}>
-                <h3 style={{ marginBottom:12 }}>PSR Budget Overview</h3>
-                <PieChart width={280} height={230}>
-                  <Pie data={donutData} cx="50%" cy="50%" innerRadius={55} outerRadius={80} dataKey="value" paddingAngle={2}>
-                    {donutData.map((_, i) => <Cell key={i} fill={DONUT_COLORS[i]}/>)}
-                  </Pie>
-                  <Tooltip
-                    contentStyle={{ background:'var(--bg-elevated)', border:'1px solid var(--glass-border)', borderRadius:8, fontSize:12 }}
-                    formatter={(v: number) => [`£${v.toFixed(1)}m`]}/>
-                  <Legend wrapperStyle={{ fontSize:'0.75rem', color:'var(--text-2)' }}/>
-                </PieChart>
+                <div className="glass" style={{ padding:24 }}>
+                  <h3 style={{ marginBottom:12 }}>Annual P&L Schedule</h3>
+                  <ResponsiveContainer width="100%" height={200}>
+                    <BarChart data={barData} margin={{ top:4, right:8, left:-16, bottom:4 }}>
+                      <XAxis dataKey="name" tick={{ fill:'var(--text-2)', fontSize:10 }} axisLine={false} tickLine={false}/>
+                      <YAxis tick={{ fill:'var(--text-2)', fontSize:10 }} axisLine={false} tickLine={false}/>
+                      <Tooltip
+                        contentStyle={{ background:'var(--bg-elevated)', border:'1px solid var(--glass-border)', borderRadius:8, fontSize:11 }}
+                        formatter={(v: number) => [`£${v.toFixed(1)}m`]}/>
+                      <Bar dataKey="Amortisation" stackId="a" fill="#4f8ef7" radius={[0,0,2,2]}/>
+                      <Bar dataKey="Wages"        stackId="a" fill="#00e87a"/>
+                      <Bar dataKey="Agent Fees"   stackId="a" fill="#f5a623" radius={[2,2,0,0]}/>
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
               </div>
 
+              {/* New Declining Book Value Chart */}
               <div className="glass" style={{ padding:24 }}>
-                <h3 style={{ marginBottom:12 }}>Annual Accounting Schedule</h3>
-                <ResponsiveContainer width="100%" height={200}>
-                  <BarChart data={barData} margin={{ top:4, right:8, left:-16, bottom:4 }}>
+                <h3 style={{ marginBottom:12 }}>Remaining Balance Sheet Book Value (Post-Amortisation)</h3>
+                <ResponsiveContainer width="100%" height={160}>
+                  <LineChart data={bookValueData} margin={{ top:4, right:8, left:-16, bottom:4 }}>
                     <XAxis dataKey="name" tick={{ fill:'var(--text-2)', fontSize:10 }} axisLine={false} tickLine={false}/>
                     <YAxis tick={{ fill:'var(--text-2)', fontSize:10 }} axisLine={false} tickLine={false}/>
                     <Tooltip
                       contentStyle={{ background:'var(--bg-elevated)', border:'1px solid var(--glass-border)', borderRadius:8, fontSize:11 }}
                       formatter={(v: number) => [`£${v.toFixed(1)}m`]}/>
-                    <Bar dataKey="Amortisation" stackId="a" fill="#4f8ef7" radius={[0,0,2,2]}/>
-                    <Bar dataKey="Wages"        stackId="a" fill="#00e87a"/>
-                    <Bar dataKey="Agent Fees"   stackId="a" fill="#f5a623" radius={[2,2,0,0]}/>
-                  </BarChart>
+                    <Line type="monotone" dataKey="Remaining Asset Value" stroke="#4f8ef7" strokeWidth={3} dot={{ fill: '#00e87a', strokeWidth: 2, r: 4 }} activeDot={{ r: 6 }}/>
+                  </LineChart>
                 </ResponsiveContainer>
               </div>
             </div>
