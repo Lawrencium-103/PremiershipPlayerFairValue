@@ -77,13 +77,17 @@ async def scout_player(player: str, club: str = "", interested_club: str = ""):
 
 
 
-# ── Currency Config ───────────────────────────────────────────────────────────
+# ── Currency Config ────────────────────────────────────────────────────────────
 EUR_TO_GBP = 0.85  # Approximate — review quarterly
 
-# ── Data / Model Globals ──────────────────────────────────────────────────────
-DATA_PATH = "data/processed/app_features.csv"
-MODEL_PATH = "fairvalue_xgboost.json"
+# ── Path resolution: works locally AND inside the Docker container ─────────────
+# Using __file__ means paths are always relative to api/main.py, not cwd.
+import pathlib
+_ROOT      = pathlib.Path(__file__).parent.parent.resolve()
+DATA_PATH  = str(_ROOT / "data" / "processed" / "app_features.csv")
+MODEL_PATH = str(_ROOT / "fairvalue_xgboost.json")
 
+# ── Data / Model Globals ───────────────────────────────────────────────────────
 df_global = None
 model_global = None
 expected_cols_global = None
