@@ -4,6 +4,7 @@ const links = [
   { to: '/estimate', label: 'Transfer Estimator' },
   { to: '/ffp',      label: 'PSR Advisor' },
   { to: '/intel',    label: 'Live Intel' },
+  { to: '/about',    label: 'About the Architect' },
 ]
 
 export default function Navbar() {
