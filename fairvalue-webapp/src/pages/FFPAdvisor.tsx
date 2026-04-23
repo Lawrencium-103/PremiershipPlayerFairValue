@@ -4,6 +4,9 @@ import {
   BarChart, Bar, XAxis, YAxis, ResponsiveContainer,
   LineChart, Line
 } from 'recharts'
+import { motion } from 'framer-motion'
+import { useUsageLimiter } from '../hooks/useUsageLimiter'
+import AccessModal from '../components/AccessModal'
 
 // ── PSR Maths (all pure frontend — no API call) ────────────────────────────────
 function calcPSR(feeMm: number, contractYrs: number, weeklyWageK: number, agentFeeMm: number) {
@@ -18,6 +21,7 @@ function calcPSR(feeMm: number, contractYrs: number, weeklyWageK: number, agentF
 const DONUT_COLORS = ['#505070', '#4f8ef7', '#00e87a']
 
 export default function FFPAdvisor() {
+  const { isLocked } = useUsageLimiter()
   const [feeMm,       setFeeMm]       = useState(50)
   const [contractYrs, setContractYrs] = useState(5)
   const [weeklyWageK, setWeeklyWageK] = useState(120)
@@ -53,8 +57,14 @@ export default function FFPAdvisor() {
   }))
 
   return (
-    <div className="page">
-      <div className="container">
+    <div className="page" style={{ position: 'relative' }}>
+      {isLocked && <AccessModal />}
+      <motion.div 
+        className="container"
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
 
         {/* Header */}
         <div style={{ marginBottom:36 }}>
@@ -215,7 +225,8 @@ export default function FFPAdvisor() {
             </p>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   )
 }
+

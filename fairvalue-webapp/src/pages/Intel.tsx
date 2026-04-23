@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import { motion } from 'framer-motion'
+import { useUsageLimiter } from '../hooks/useUsageLimiter'
+import AccessModal from '../components/AccessModal'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
@@ -93,6 +96,7 @@ function HypeFactorDisplay({ durability, recency, agent }: { durability: number;
 }
 
 export default function Intel() {
+  const { isLocked, incrementUsage } = useUsageLimiter()
   const [player,        setPlayer]        = useState('')
   const [club,          setClub]          = useState('')
   const [result,        setResult]        = useState<ScoutResult | null>(null)
@@ -101,6 +105,7 @@ export default function Intel() {
   const [showLog,       setShowLog]       = useState(false)
 
   const handleFetch = async () => {
+    if (!incrementUsage()) return;
     if (!player.trim()) { setError('Enter a player name first.'); return }
     setLoading(true); setError(null); setResult(null)
     try {
@@ -119,8 +124,14 @@ export default function Intel() {
   }
 
   return (
-    <div className="page">
-      <div className="container">
+    <div className="page" style={{ position: 'relative' }}>
+      {isLocked && <AccessModal />}
+      <motion.div 
+        className="container"
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
 
         {/* Header */}
         <div style={{ marginBottom:36 }}>
@@ -238,7 +249,7 @@ export default function Intel() {
             <p>Enter a player name above and click Fetch Intel.</p>
           </div>
         )}
-      </div>
+      </motion.div>
     </div>
   )
 }

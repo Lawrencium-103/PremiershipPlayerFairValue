@@ -3,6 +3,9 @@ import {
   BarChart, Bar, Cell, XAxis, YAxis, Tooltip,
   ResponsiveContainer, ReferenceLine,
 } from 'recharts'
+import { motion } from 'framer-motion'
+import { useUsageLimiter } from '../hooks/useUsageLimiter'
+import AccessModal from '../components/AccessModal'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
@@ -129,6 +132,7 @@ function SentimentScore({ label, value, icon }: { label: string; value: number; 
 
 // ── Main Estimator Page ───────────────────────────────────────────────────────
 export default function Estimator() {
+  const { isLocked, incrementUsage } = useUsageLimiter()
   const [form, setForm] = useState({
     selected_name: '',
     current_club: '',
@@ -147,6 +151,7 @@ export default function Estimator() {
   const set = (k: string, v: string | number) => setForm(f => ({ ...f, [k]: v }))
 
   const handleSubmit = async () => {
+    if (!incrementUsage()) return;
     if (!form.selected_name.trim()) { setError('Player name is required.'); return }
     setLoading(true); setError(null); setResult(null)
     try {
@@ -171,6 +176,7 @@ export default function Estimator() {
 
   return (
     <div className="page">
+      {isLocked && <AccessModal />}
       <div className="container">
 
         {/* Header */}
@@ -300,7 +306,13 @@ export default function Estimator() {
             )}
 
             {result && L && (
-              <div className="animate-in" style={{ display:'flex', flexDirection:'column', gap:18 }}>
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="animate-in" 
+                style={{ display:'flex', flexDirection:'column', gap:18 }}
+              >
 
                 {/* Verdict alert */}
                 <div className={`alert ${form.asking_price > L.hard_cap ? 'alert-danger' : 'alert-success'}`}>
@@ -388,7 +400,7 @@ export default function Estimator() {
                     )}
                   </div>
                 </div>
-              </div>
+              </motion.div>
             )}
           </div>
         </div>
