@@ -43,8 +43,8 @@ export default function Navbar() {
                 borderRadius: 8,
                 fontSize: '0.85rem',
                 fontWeight: isActive ? 600 : 400,
-                color: isActive ? 'var(--green)' : 'var(--text-2)',
-                background: isActive ? 'var(--green-dim)' : 'transparent',
+                color: isActive ? 'var(--profit-color)' : 'var(--text-2)',
+                background: isActive ? 'rgba(34,197,94,0.15)' : 'transparent',
                 transition: 'all 0.2s',
                 textDecoration: 'none',
               })}
@@ -54,7 +54,7 @@ export default function Navbar() {
 
         {/* Badge */}
         <span className="badge badge-blue" style={{ fontSize:'0.68rem', display:'flex', alignItems:'center', gap:5 }}>
-          <span style={{ width:6, height:6, borderRadius:'50%', background:'var(--green)', display:'inline-block', animation:'pulse-ring 2s infinite' }}/>
+          <span style={{ width:6, height:6, borderRadius:'50%', background:'var(--profit-color)', display:'inline-block', animation:'pulse-ring 2s infinite' }}/>
           XGBoost + SHAP
         </span>
       </div>

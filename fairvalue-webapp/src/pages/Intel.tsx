@@ -19,7 +19,7 @@ function ScoreCard({
 }: { label: string; value: number; icon: string; desc: string }) {
   const norm  = (value + 1) / 2             // –1..+1 → 0..1
   const pct   = Math.round(norm * 100)
-  const color = value > 0.1 ? 'var(--green)' : value < -0.1 ? 'var(--red)' : 'var(--blue)'
+  const color = value > 0.1 ? 'var(--profit-color)' : value < -0.1 ? 'var(--loss-color)' : 'var(--accent-blue)'
   const label2 = value > 0.15 ? 'Positive' : value < -0.15 ? 'Negative' : 'Neutral'
   const badge  = value > 0.15 ? 'badge-green' : value < -0.15 ? 'badge-red' : 'badge-blue'
 
@@ -71,7 +71,7 @@ function HypeFactorDisplay({ durability, recency, agent }: { durability: number;
   return (
     <div className="glass" style={{
       padding:24,
-      background: isPos ? 'var(--green-dim)' : 'var(--red-dim)',
+      background: isPos ? 'rgba(34,197,94,0.15)' : 'rgba(239,68,68,0.15)',
       borderColor: isPos ? 'rgba(0,232,122,0.2)' : 'rgba(255,77,109,0.2)',
     }}>
       <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
@@ -83,10 +83,10 @@ function HypeFactorDisplay({ durability, recency, agent }: { durability: number;
           </p>
         </div>
         <div style={{ textAlign:'right' }}>
-          <div style={{ fontSize:'2.8rem', fontWeight:900, color: isPos ? 'var(--green)' : 'var(--red)', letterSpacing:'-0.04em' }}>
+          <div style={{ fontSize:'2.8rem', fontWeight:900, color: isPos ? 'var(--profit-color)' : 'var(--loss-color)', letterSpacing:'-0.04em' }}>
             ×{mult.toFixed(3)}
           </div>
-          <div style={{ fontSize:'0.82rem', color: isPos ? 'var(--green)' : 'var(--red)', fontWeight:600 }}>
+          <div style={{ fontSize:'0.82rem', color: isPos ? 'var(--profit-color)' : 'var(--loss-color)', fontWeight:600 }}>
             {isPos ? `+${pct}% sentiment premium` : `${pct}% sentiment discount`}
           </div>
         </div>

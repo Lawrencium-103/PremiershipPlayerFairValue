@@ -53,10 +53,10 @@ function Gauge({ asking, hardCap }: { asking: number; hardCap: number }) {
       {/* Track */}
       <path d={arc(-180,0)} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth={18} strokeLinecap="round"/>
       {/* Green zone: 0 → cap */}
-      <path d={arc(-180, capDeg)} fill="none" stroke="var(--green)" strokeWidth={18} strokeLinecap="round" opacity={0.85}/>
+      <path d={arc(-180, capDeg)} fill="none" stroke="var(--profit-color)" strokeWidth={18} strokeLinecap="round" opacity={0.85}/>
       {/* Red zone: cap → asking (only if over) */}
       {isOver && (
-        <path d={arc(capDeg, Math.min(askDeg, 0))} fill="none" stroke="var(--red)" strokeWidth={18} strokeLinecap="round" opacity={0.85}/>
+        <path d={arc(capDeg, Math.min(askDeg, 0))} fill="none" stroke="var(--loss-color)" strokeWidth={18} strokeLinecap="round" opacity={0.85}/>
       )}
       {/* Needle */}
       <line x1={cx} y1={cy} x2={pt(askDeg).x} y2={pt(askDeg).y} stroke="white" strokeWidth={2.5} strokeLinecap="round"/>
@@ -64,7 +64,7 @@ function Gauge({ asking, hardCap }: { asking: number; hardCap: number }) {
       {/* Cap label */}
       <text x={pt(capDeg).x + (capDeg < -90 ? -6 : 6)} y={pt(capDeg).y - 6}
         textAnchor={capDeg < -90 ? 'end' : 'start'}
-        fill="var(--green)" fontSize={9} fontWeight={600}>
+        fill="var(--profit-color)" fontSize={9} fontWeight={600}>
         Hard Cap £{hardCap.toFixed(0)}m
       </text>
       {/* Center: asking */}
@@ -72,7 +72,7 @@ function Gauge({ asking, hardCap }: { asking: number; hardCap: number }) {
         £{asking.toFixed(0)}m
       </text>
       <text x={cx} y={cy + 40} textAnchor="middle"
-        fill={isOver ? 'var(--red)' : 'var(--green)'} fontSize={12} fontWeight={600}>
+        fill={isOver ? 'var(--loss-color)' : 'var(--profit-color)'} fontSize={12} fontWeight={600}>
         {isOver
           ? `▲ £${(asking - hardCap).toFixed(1)}m OVER CAP`
           : `✓ Within Hard Cap`}
@@ -103,7 +103,7 @@ function ShapChart({ data }: { data: { feature: string; impact: number }[] }) {
         <ReferenceLine x={0} stroke="rgba(255,255,255,0.12)" strokeWidth={1}/>
         <Bar dataKey="impact" radius={3}>
           {data.map((entry, i) => (
-            <Cell key={i} fill={entry.impact >= 0 ? 'var(--green)' : 'var(--red)'} fillOpacity={0.85}/>
+            <Cell key={i} fill={entry.impact >= 0 ? 'var(--profit-color)' : 'var(--loss-color)'} fillOpacity={0.85}/>
           ))}
         </Bar>
       </BarChart>
@@ -114,7 +114,7 @@ function ShapChart({ data }: { data: { feature: string; impact: number }[] }) {
 // ── NLP Sentiment Score ───────────────────────────────────────────────────────
 function SentimentScore({ label, value, icon }: { label: string; value: number; icon: string }) {
   const pct = Math.round(((value + 1) / 2) * 100)
-  const color = value > 0.1 ? 'var(--green)' : value < -0.1 ? 'var(--red)' : 'var(--blue)'
+  const color = value > 0.1 ? 'var(--profit-color)' : value < -0.1 ? 'var(--loss-color)' : 'var(--accent-blue)'
   return (
     <div>
       <div style={{ display:'flex', justifyContent:'space-between', marginBottom:6 }}>
@@ -332,13 +332,13 @@ export default function Estimator() {
                     <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
                       <div>
                         <div className="metric-label">Intrinsic Performance Value</div>
-                        <div className="metric-value" style={{ color:'var(--green)' }}>£{L.intrinsic_performance_value.toFixed(1)}m</div>
+                        <div className="metric-value" style={{ color:'var(--profit-color)' }}>£{L.intrinsic_performance_value.toFixed(1)}m</div>
                         <span className="badge badge-green" style={{ marginTop:4 }}>{L.category}</span>
                       </div>
                       <div className="divider" style={{ margin:'8px 0' }}/>
                       <div>
                         <div className="metric-label">Age & Contract Depreciation</div>
-                        <div className="metric-value" style={{ color: L.depreciation < 0 ? 'var(--red)' : 'var(--blue)' }}>
+                        <div className="metric-value" style={{ color: L.depreciation < 0 ? 'var(--loss-color)' : 'var(--accent-blue)' }}>
                           {L.depreciation >= 0 ? '+' : ''}£{L.depreciation.toFixed(1)}m
                         </div>
                         <span className="badge badge-blue" style={{ marginTop:4 }}>SHAP Calculated Penalty</span>
@@ -350,13 +350,13 @@ export default function Estimator() {
                       </div>
                       <div>
                         <div className="metric-label">NLP Multiplier</div>
-                        <div className="metric-value" style={{ color: L.external_multiplier > 1 ? 'var(--green)' : 'var(--red)' }}>
+                        <div className="metric-value" style={{ color: L.external_multiplier > 1 ? 'var(--profit-color)' : 'var(--loss-color)' }}>
                           ×{L.external_multiplier.toFixed(3)}
                         </div>
                       </div>
-                      <div style={{ padding:'12px 14px', background:'var(--green-dim)', borderRadius:10, border:'1px solid rgba(0,232,122,0.2)' }}>
+                      <div style={{ padding:'12px 14px', background:'rgba(34,197,94,0.15)', borderRadius:10, border:'1px solid rgba(0,232,122,0.2)' }}>
                         <div className="metric-label">🎯 Hard Cap</div>
-                        <div style={{ fontSize:'2.2rem', fontWeight:900, color:'var(--green)', letterSpacing:'-0.03em' }}>
+                        <div style={{ fontSize:'2.2rem', fontWeight:900, color:'var(--profit-color)', letterSpacing:'-0.03em' }}>
                           £{L.hard_cap.toFixed(1)}m
                         </div>
                       </div>
