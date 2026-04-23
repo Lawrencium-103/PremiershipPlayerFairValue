@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { Linkedin, Github, Mail, Phone, ExternalLink, Briefcase, GraduationCap, Code, Database, BrainCircuit, LineChart } from 'lucide-react'
+import { Mail, Phone, ExternalLink, Briefcase, GraduationCap, Code, Database, BrainCircuit, LineChart } from 'lucide-react'
 
 const PROJECTS = [
   {
@@ -88,7 +88,7 @@ export default function AboutDeveloper() {
                 <Mail size={18} /> oladeji.lawrence@gmail.com
               </a>
               <a href="https://github.com/Lawrencium-103" target="_blank" rel="noreferrer" className="btn btn-ghost">
-                <Github size={18} /> GitHub: Lawrencium-103
+                <Code size={18} /> GitHub: Lawrencium-103
               </a>
               <span className="btn btn-ghost" style={{ cursor: 'default' }}>
                 <Phone size={18} /> +234 903 881 9790
