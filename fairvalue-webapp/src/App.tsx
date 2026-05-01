@@ -5,8 +5,15 @@ import Estimator from './pages/Estimator'
 import FFPAdvisor from './pages/FFPAdvisor'
 import Intel from './pages/Intel'
 import AboutDeveloper from './pages/AboutDeveloper'
+import SecretGate, { useAccessControl } from './components/SecretGate'
 
 export default function App() {
+  const { granted, grant } = useAccessControl()
+
+  if (!granted) {
+    return <SecretGate onGranted={grant} />
+  }
+
   return (
     <>
       <Navbar />
