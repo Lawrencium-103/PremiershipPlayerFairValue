@@ -8,7 +8,7 @@ export function useUsageLimiter() {
   const [isLocked, setIsLocked] = useState<boolean>(false);
 
   useEffect(() => {
-    if (localStorage.getItem('admin_access') === 'Britzy') return;
+    if (localStorage.getItem('admin_access') === 'Britzy' || sessionStorage.getItem('fv_access_granted') === 'true') return;
     
     const stored = localStorage.getItem(USAGE_KEY);
     const count = stored ? parseInt(stored, 10) : 0;
@@ -19,7 +19,7 @@ export function useUsageLimiter() {
   }, []);
 
   const incrementUsage = () => {
-    if (localStorage.getItem('admin_access') === 'Britzy') return true;
+    if (localStorage.getItem('admin_access') === 'Britzy' || sessionStorage.getItem('fv_access_granted') === 'true') return true;
     
     const newCount = useCount + 1;
     setUseCount(newCount);
