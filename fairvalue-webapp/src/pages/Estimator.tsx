@@ -130,6 +130,79 @@ function SentimentScore({ label, value, icon }: { label: string; value: number; 
   )
 }
 
+// ── Custom Loaders ────────────────────────────────────────────────────────────
+function AILoader() {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, margin: '20px 0 30px' }}>
+      <div style={{ position: 'relative', width: 64, height: 64 }}>
+        {/* Outer dashed ring */}
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+          style={{
+            position: 'absolute', inset: 0,
+            border: '2px dashed rgba(59, 130, 246, 0.3)',
+            borderRadius: '50%'
+          }}
+        />
+        {/* Inner solid fast ring */}
+        <motion.div
+          animate={{ rotate: -360 }}
+          transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+          style={{
+            position: 'absolute', inset: 6,
+            borderTop: '2px solid var(--accent-blue)',
+            borderRight: '2px solid transparent',
+            borderBottom: '2px solid transparent',
+            borderLeft: '2px solid transparent',
+            borderRadius: '50%'
+          }}
+        />
+        {/* Core pulsing glow */}
+        <motion.div
+          animate={{ scale: [0.8, 1.2, 0.8], opacity: [0.4, 0.8, 0.4] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          style={{
+            position: 'absolute', inset: 16,
+            background: 'radial-gradient(circle, rgba(59,130,246,0.6) 0%, transparent 70%)',
+            borderRadius: '50%'
+          }}
+        />
+        {/* Central node */}
+        <div style={{
+          position: 'absolute', inset: 26,
+          background: 'var(--text-1)',
+          borderRadius: '50%',
+          boxShadow: '0 0 10px rgba(255,255,255,0.8)'
+        }} />
+      </div>
+      <motion.div 
+        animate={{ opacity: [0.5, 1, 0.5] }}
+        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+        style={{ fontSize: '0.8rem', color: '#60a5fa', fontWeight: 700, letterSpacing: '0.15em' }}
+      >
+        ANALYSING MARKET INTEL...
+      </motion.div>
+    </div>
+  )
+}
+
+function ButtonPulse() {
+  return (
+    <motion.div
+      animate={{ scale: [1, 1.5, 1], opacity: [1, 0, 1] }}
+      transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+      style={{
+        width: 10, height: 10,
+        background: '#3B82F6',
+        borderRadius: '50%',
+        marginRight: 6,
+        boxShadow: '0 0 8px #3B82F6'
+      }}
+    />
+  )
+}
+
 // ── Main Estimator Page ───────────────────────────────────────────────────────
 export default function Estimator() {
   const { isLocked, incrementUsage } = useUsageLimiter()
@@ -279,7 +352,7 @@ export default function Estimator() {
             <button className="btn btn-primary" style={{ width:'100%', justifyContent:'center', padding:14 }}
               onClick={handleSubmit} disabled={loading}>
               {loading
-                ? <><span className="spinner"/> Fetching live intel… (15–30s)</>
+                ? <><ButtonPulse /> Fetching live intel… (15–30s)</>
                 : '⚡ Calculate Hard Cap'}
             </button>
 
@@ -297,8 +370,8 @@ export default function Estimator() {
 
             {loading && (
               <div className="glass" style={{ padding:48, textAlign:'center' }}>
-                <div className="spinner" style={{ width:40, height:40, margin:'0 auto 20px' }}/>
-                <p>Running ML inference + scraping live market signals…</p>
+                <AILoader />
+                <p style={{ color: 'var(--text-1)', fontWeight: 500 }}>Running ML inference + scraping live market signals…</p>
                 <p style={{ fontSize:'0.8rem', color:'var(--text-3)', marginTop:8 }}>
                   Live DDGS intel can take 15–30 seconds first time.
                 </p>
